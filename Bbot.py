@@ -1,5 +1,6 @@
 from binance.client import Client 
-## from decouple import config 
+## from decouple import config
+import pandas as pd
 
 
 api_key = 'ALsgaJ0YT0aLV0GrRLzE9V7zNMDGvpMJmfg1iTit6oHGibcebwi27FO6HoPAw6zi'
@@ -14,6 +15,11 @@ def fetch_klines(asset):
 
     klines = Client.get_historical_klines(asset, Client.KLINE_INTERVAL_1MINUTE,"1 hour AGO utc")
 
-    print(klines)
+    klines = [ [x[0], float(x[4]) ] for x in klines ]
+
+    klines = pd.DataFrame(klines, columns = ["time", "price"])
+    klines["time"] = pd.to_datetime(klines["time"], unit = "ms")
+
+    return klines 
 
 fetch_klines("BTCUSDT")
