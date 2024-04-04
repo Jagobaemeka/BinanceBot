@@ -70,10 +70,30 @@ def do_trade(account, Client, asset , side, quantity):
     if side == "buy":
         order = Client.order_market_buy(symbol = asset, 
                 quantity = quantity  )
-
         account["is_buying"] = True
 
-        print(order)
+    else: 
+        order = Client.order_market_buy(symbol = asset, 
+                quantity = quantity  )
+        account["is_buying"] = False
+
+    order_id = order["orderId"]
+
+    while order["status"] != "FILLED":
+
+        order = Client.get_order(
+                symbol = asset,
+                orderId = order_id
+                )
+
+        time.sleep(1)
+    print(order)
+
+
+
+
+
+
 
 
 do_trade({}, Client, asset, "buy", 0.01)
