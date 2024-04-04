@@ -9,4 +9,11 @@ Client = Client(api_key, api_secret, testnet=True )
 
 balance = Client.get_asset_balance(asset = "BTC")
 
-print(balance)
+def fetch_klines(asset):
+
+
+    klines = Client.get_historical_klines(asset, Client.KLINE_INTERVAL_1MINUTE,"1 hour AGO utc")
+
+    print(klines)
+
+fetch_klines("BTCUSDT")
