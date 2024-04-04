@@ -2,6 +2,7 @@ from binance.client import Client
 ## from decouple import config
 import pandas as pd
 import pandas_ta as ta
+import json
 
 
 api_key = 'ALsgaJ0YT0aLV0GrRLzE9V7zNMDGvpMJmfg1iTit6oHGibcebwi27FO6HoPAw6zi'
@@ -21,13 +22,26 @@ def fetch_klines(asset):
     klines = pd.DataFrame(klines, columns = ["time", "price"])
     klines["time"] = pd.to_datetime(klines["time"], unit = "ms")
 
-    return klines 
+    return klines
 
 def get_rsi(asset):
     
     klines = fetch_klines(asset)
     klines["rsi"] = ta.rsi(close = klines["price"], lenght = 14)
 
-    print(klines)
+    return klines["rsi"].iloc[- 1]
 
-get_rsi("BTCUSDT")
+def create_account():
+
+    account = {
+            "is_buying":True,
+            "assets":{},
+            }
+
+
+    with open("bot_account.json","w") as f:
+        f.write(json.dumps(account))
+
+
+
+create_account()
