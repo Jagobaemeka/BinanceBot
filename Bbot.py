@@ -1,6 +1,7 @@
 from binance.client import Client 
 ## from decouple import config
 import pandas as pd
+import pandas_ta as ta
 
 
 api_key = 'ALsgaJ0YT0aLV0GrRLzE9V7zNMDGvpMJmfg1iTit6oHGibcebwi27FO6HoPAw6zi'
@@ -22,4 +23,11 @@ def fetch_klines(asset):
 
     return klines 
 
-fetch_klines("BTCUSDT")
+def get_rsi(asset):
+    
+    klines = fetch_klines(asset)
+    klines["rsi"] = ta.rsi(close = klines["price"], lenght = 14)
+
+    print(klines)
+
+get_rsi("BTCUSDT")
