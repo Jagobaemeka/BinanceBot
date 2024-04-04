@@ -65,6 +65,19 @@ def log(msg):
     with open(f"logs/{today}.txt", "a+") as log_file:
         log_file.write(f"{time} : {msg}\n")
 
+def do_trade(account, Client, asset , side, quantity):
+
+    if side == "buy":
+        order = Client.order_market_buy(symbol = asset, 
+                quantity = quantity  )
+
+        account["is_buying"] = True
+
+        print(order)
+
+
+do_trade({}, Client, asset, "buy", 0.01)
+
 rsi = get_rsi(asset)
 old_rsi = rsi 
 
