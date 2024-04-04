@@ -3,10 +3,20 @@ from binance.client import Client
 import pandas as pd
 import pandas_ta as ta
 import json
+import os
+import time
+import sys
+import datetime
 
 
 api_key = 'ALsgaJ0YT0aLV0GrRLzE9V7zNMDGvpMJmfg1iTit6oHGibcebwi27FO6HoPAw6zi'
 api_secret = 'ZDQzixxr21pO1LYUt8ntCbZ2P5uL0PufBppGdN32R1vEtU8rMFkfUlv21HSAEr2m'
+
+asset ="BTCUSDT"
+entry = 30 # Example value for entry
+exit = 70 # Example value for exit
+
+
 
 Client = Client(api_key, api_secret, testnet=True )
 
@@ -42,6 +52,54 @@ def create_account():
     with open("bot_account.json","w") as f:
         f.write(json.dumps(account))
 
+def log(msg):
+    print(f"L0G: {msg}")
+    if not os.path.isdir("logs"):
+        os.mkdir("logs")
 
 
-create_account()
+    now = datetime.datetime.now()
+    today = now.strftime("%Y-%m-%d")
+    time = now.strftime("%Y-%m-%d")
+
+    with open(f"logs/{today}.txt", "a+") as log_file:
+        log_file.write(f"{time} : {msg}\n")
+
+rsi = get_rsi(asset)
+old_rsi = rsi 
+
+
+while True:
+
+    try:
+
+        if not os.path.exists("bot_account.json"):
+            create_account()
+
+        with open("bot_account.json") as f:
+                account = json.load(f)
+
+        print(account)
+
+
+        old_rsi = rsi
+        rsi = get_rsi(asset)
+
+        if account["is_buying"]:
+
+            if rsi < entry and old_rsi > entry:
+                pass
+                #do trade   
+
+        else:
+            
+            if rsi > exit and old_rsi < exit:
+                pass
+                #do trade
+    
+        time.sleep(10)
+        pass
+    except Exception as e:
+        log("ERROR" + str(e) )
+        #log error
+             
